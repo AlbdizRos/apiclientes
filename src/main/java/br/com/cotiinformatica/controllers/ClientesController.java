@@ -199,8 +199,39 @@ public class ClientesController {
 		
 		}
 	}
-}
 	
+	@RequestMapping(value = "/api/clientes/obter-por-nome/{nome}", method = RequestMethod.GET)
+	public ResponseEntity<List<ClienteGetResponse>> getByNome(@PathVariable("nome") String nome) {
+		
+		try {
+			
+			List<Cliente> clientes = clienteRepository.findByNome(nome);
+			List<ClienteGetResponse> lista = new ArrayList<ClienteGetResponse>();
+
+			for(Cliente cliente : clientes) {
+				
+				ClienteGetResponse response = new ClienteGetResponse();
+				response.setIdCliente(cliente.getIdCliente());
+				response.setNome(cliente.getNome());
+				response.setCpf(cliente.getCpf());
+				response.setEmail(cliente.getEmail());
+				
+				lista.add(response);				
+			}
+			
+			return ResponseEntity
+					.status(HttpStatus.OK)
+					.body(lista);
+		}
+		catch(Exception e) {
+			
+			return ResponseEntity
+					.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(null);
+		}		
+	}
+	
+}	
 	
 
 
